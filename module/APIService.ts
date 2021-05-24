@@ -5,7 +5,7 @@ import Axios from "axios";
 class APIService {
   protected HOST: string = "";
   protected VERSION: string = "";
-  protected PURGE: string = "";
+  protected PURGE: boolean;
   protected URL: string = "https://2w0pitlo9d.execute-api.ap-southeast-1.amazonaws.com/default/Hamstr-server";
 
   private sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
@@ -38,7 +38,7 @@ class APIService {
       console.log("ENV Updating!");
       this.VERSION = result.version;
       this.HOST = result.host;
-      this.PURGE = result.purge;
+      this.PURGE = result.purge === 'true';
     } else {
       console.log("Now latestVersion.. NoUpdating");
     }
@@ -53,7 +53,7 @@ class APIService {
     return this.VERSION;
   };
   // 퍼지 유무
-  public getPURGE: () => string = () => {
+  public getPURGE: () => boolean = () => {
     return this.PURGE;
   };
 }
