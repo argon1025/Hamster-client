@@ -1,7 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
-import testLogic from "./module/test";
+import Client from "./module/Client";
+import ServerState from "./module/ServerState";
 
 let mainWindow: BrowserWindow;
 
@@ -10,14 +11,14 @@ const createWindow = () => {
     width: 900,
     height: 680,
     center: true,
-    show:false,
+    show: false,
     //kiosk: !isDev,
     resizable: true,
     webPreferences: {
       // node환경처럼 사용하기
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation : false,
+      contextIsolation: false,
       // 개발자도구
       devTools: isDev,
     },
@@ -30,10 +31,36 @@ const createWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
-
-  testLogic();
-
-  // Emitted when the window is closed.
+  /**
+   * 1. 서버값 받아옴.
+   * 2. connect 함.
+   * 3. 연결끊김.
+   * 4. 서버값 다시 받아옴.
+   * 
+   * 3 4 2
+   * 
+   */
+  const sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+  
+  async function socketConnect(){
+    while (true) {
+      try {
+        await ServerState.getState()
+        const host = ServerState.getHonst();
+        await Client.makeSocket(host)
+      } catch (error) {
+        console.log(error);
+        await sleep(1000);
+      } 
+    }
+  }
+  
+    
+  socketConnect()
+  
+  // Emitted when the window is c-sd5n6m7p-[]losed.
   mainWindow.on('closed', () => (mainWindow = undefined!));
   mainWindow.focus();
 };
@@ -49,7 +76,10 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
+app.setLoginItemSettings({
+  openAtLogin: true,
+  path: app.getPath('exe')
+})
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
