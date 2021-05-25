@@ -1,7 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
-import Client from "./module/Client copy";
+import Client from "./module/Client";
+import ServerState from "./module/ServerState";
 
 let mainWindow: BrowserWindow;
 
@@ -39,9 +40,27 @@ const createWindow = () => {
    * 3 4 2
    * 
    */
-  Client.setState()
-  Client.connectSocket()
-  // Emitted when the window is closed.
+  const sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+  
+  async function socketConnect(){
+    while (true) {
+      try {
+        await ServerState.getState()
+        const host = ServerState.getHonst();
+        await Client.makeSocket(host)
+      } catch (error) {
+        console.log(error);
+        await sleep(1000);
+      } 
+    }
+  }
+  
+    
+  socketConnect()
+  
+  // Emitted when the window is c-sd5n6m7p-[]losed.
   mainWindow.on('closed', () => (mainWindow = undefined!));
   mainWindow.focus();
 };

@@ -1,114 +1,59 @@
 import APIService from './APIService'
+import ServerState from "./ServerState";
+import { ipcMain } from 'electron';
 const io = require('socket.io-client');
-//import * as io from "socket.io-client";
 
 interface iClient {
-  host: string
-  version: string
-  purge: Boolean
   socket: object
   isconnect: boolean
 }
-
-/**
- * flow
- * 1. 서버에 연결을 시도합니다.
- * 2. 서버에 연결이 되면 
- */
 class Client implements iClient {
-  host: string
-  version: string
-  purge: Boolean
   socket: any
   isconnect: boolean
 
-  private sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-  // AWS에서 설정값을 받아옵니다.
-  public setState: () => {} = async () => {
-    await APIService.upDateState()
-    this.host = await APIService.getHOST() || undefined;
-    this.version = await APIService.getVERSION() || '1';
-    this.purge = await APIService.getPURGE() || false;
-    this.isconnect = false;
-  }
-
-  // shutdown command
-  protected shutDown() {
-    return new Promise((resolve) => {
-      this.socket.on('shutdown', () => {
-        console.log("shutdown명령받음");
+  public makeSocket: (host: string) => void = async (host: string) => {
+    return new Promise((resolve, rejects) => {
+      let socket = io.connect(host, {
+        reconnectionAttempt: 3,
+        reconnection: false,
+        autoConnect: false,
+      });
+      socket = socket.connect();
+      socket.on("error", (error) => {
+        console.log("error");
+        console.log(socket.error); // true
+        rejects(error);
+      });
+      socket.on("connect_error", (error) => {
+        console.log("ce");
+        socket.close(true);
+        rejects(error);
+      });
+      socket.on("disconnect", (reason) => {
+        console.log(reason);
+        socket.close(true);
+        rejects(reason);
+      });
+      socket.on("connect", () => {
+        console.log("conenc");
+        console.log(socket.connected); // true
+        console.log(socket.id);
+      });
+      socket.on("get_userinfo", () => {
+        console.log("서버가 내정보 요청");
+        socket.emit("set_userinfo", { "socketID": socket.id })
+      });
+      socket.on("get_userinfo", () => {
+        console.log("서버가 내정보 요청");
+        socket.emit("set_userinfo", { "socketID": socket.id })
+      });
+      socket.on("shutdown", ()=>{
+        console.log("shutdown");
       })
-      resolve(true)
-    })
-
-  }
-  // reboot command
-  protected reBoot() {
-    return new Promise((resolve) => {
-      this.socket.on('reboot', () => {
-        console.log("reboot명령받음");
+      socket.on("reboot", ()=>{
+        console.log("reboot");
       })
-      resolve(true)
-    })
-  }
-
-  // public makeConnect: () => any = async () => {
-  //   while (!this.isconnect) {
-  //     // console.log("A");
-  //     await this.setState();
-  //     // console.log("B");
-  //     await this.ConnectSocket();
-  //     // console.log("C");
-  //     await this.communication();
-  //     // console.log("D");
-  //     await this.disConnect();
-  //     // console.log("E");
-  //     await this.shutDown();
-  //     // console.log("F");
-  //     await this.reBoot();
-  //     // console.log("G");
-  //     // 서버에 연결이 되지않으면 접속을 끊습니다.
-  //     console.log(this.socket.disconnected);
-  //     await this.sleep(1000)
-
-  //     if (!this.isconnect) {
-  //       console.log("접속 실패! - 초기화할꺼임")
-  //       this.socket.disconnect(true)
-  //     }
-  //   }
-  // }
-  // 서버에 연결을 시도합니다.
-  // 1. 서버에 성공적으로 접속함.
-  // 2. 서버 접속 실패.
-  public async ConnectSocket() {
-    console.log(this.host);  
-    this.socket = await io.connect(this.host);
-  }
-  // 연결해제 이벤트
-  // 1. 서버에 setState함수를 호출해 새로운 호스트를 찾습니다.
-  public disConnect() {
-    return new Promise((resolve) => {
-      if (this.socket.connected) {
-        this.socket.on("disconnect", () => {
-          console.log("서버와 연결이 끊겼습니다.");
-          this.isconnect = false
-        })
-      }
-      resolve(true);
-    })
-  }
-  // 서버에게 클라이언트 정보 전송
-  public communication() {
-    return new Promise((resolve) => {
-        this.socket.on("get_userinfo", () => {
-          this.isconnect = true;
-          console.log("서버가 내정보 요청");
-          this.socket.emit("set_userinfo", { "socketID": this.socket.id })
-        })
-      resolve(true);
-    })
+    });
   }
 }
 
