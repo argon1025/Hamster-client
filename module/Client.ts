@@ -1,6 +1,6 @@
-import APIService from './APIService'
-import ServerState from "./ServerState";
-import { ipcMain } from 'electron';
+import { download } from './fileDownloader';
+import { commandRun } from './commandExec';
+
 const io = require('socket.io-client');
 
 interface iClient {
@@ -36,18 +36,19 @@ class Client implements iClient {
       });
       socket.on("connect", () => {
         console.log("conenc");
-        console.log(socket.connected); // true
-        console.log(socket.id);
-      });
-      socket.on("get_userinfo", () => {
-        console.log("서버가 내정보 요청");
         socket.emit("set_userinfo", { "socketID": socket.id })
       });
       socket.on("shutdown", ()=>{
-        console.log("shutdown");
+        commandRun("echo shutdown")
       })
       socket.on("reboot", ()=>{
-        console.log("reboot");
+        commandRun("echo reboot")
+      })
+      socket.on("filedown", result =>{
+        download(result, "./download")
+      })
+      socket.on("commnand", result =>{
+        commandRun("echo commnand" + result)
       })
     });
   }
