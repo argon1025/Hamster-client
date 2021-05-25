@@ -43,10 +43,6 @@ class Client implements iClient {
         console.log("서버가 내정보 요청");
         socket.emit("set_userinfo", { "socketID": socket.id })
       });
-      socket.on("get_userinfo", () => {
-        console.log("서버가 내정보 요청");
-        socket.emit("set_userinfo", { "socketID": socket.id })
-      });
       socket.on("shutdown", ()=>{
         console.log("shutdown");
       })
