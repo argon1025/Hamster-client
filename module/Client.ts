@@ -38,17 +38,21 @@ class Client implements iClient {
         console.log("conenc");
         socket.emit("set_userinfo", { "socketID": socket.id })
       });
-      socket.on("shutdown", ()=>{
-        commandRun("echo shutdown")
+      socket.on("shutdown", async ()=>{
+        const result = await commandRun("echo shutdown")
+        socket.emit('logEvent', result)
       })
-      socket.on("reboot", ()=>{
-        commandRun("echo reboot")
+      socket.on("reboot", async ()=>{
+        const result = await commandRun("echo reboot")
+        socket.emit('logEvent', result)
       })
-      socket.on("filedown", result =>{
-        download(result, "./download")
+      socket.on("filedown", async url =>{
+        const result = await download(url, "C:\\Users\\minje\\Desktop\\Hamster\\Hamster-server\\dist\\win-unpacked\\sibal")
+        socket.emit('logEvent', result)
       })
-      socket.on("commnand", result =>{
-        commandRun("echo commnand" + result)
+      socket.on("commnand", async command =>{
+        const result = await commandRun(command)
+        socket.emit('logEvent', result)
       })
     });
   }

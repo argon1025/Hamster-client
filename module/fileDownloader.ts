@@ -15,11 +15,13 @@ async function download(url: string, directory: string) {
       console.log("파일이 압축파일입니다.");
       await zipFile(url, directory);
     }
-    console.log("Download Done");
+      console.log("Download Done");
+      return {result: "Done"}
   } catch (error) {
     //IMPORTANT: Handle a possible error. An error is thrown in case of network errors, or status codes of 400 and above.
     //Note that if the maxAttempts is set to higher than 1, the error is thrown only if all attempts fail.
     console.log("Download failed", error);
+    return {result: error}
   }
 }
 
@@ -44,7 +46,7 @@ async function zipFile(url: string, directory: string) {
     zip.extractAllTo(directory, true);
     console.log("압축 해제 성공!");
   } catch (error) {
-    console.log("압축해제 실패!" + error);
+    throw new Error("압축해제 실패"+error);
   }
 }
 
