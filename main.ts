@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
-import Client from "./module/Client";
+import Client from "./module/Client copy";
 
 let mainWindow: BrowserWindow;
 
@@ -39,7 +39,8 @@ const createWindow = () => {
    * 3 4 2
    * 
    */
-  new Client().makeConnect();
+  Client.setState()
+  Client.connectSocket()
   // Emitted when the window is closed.
   mainWindow.on('closed', () => (mainWindow = undefined!));
   mainWindow.focus();

@@ -21,39 +21,16 @@ class Client implements iClient {
   purge: Boolean
   socket: any
   isconnect: boolean
-
   private sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
   // AWS에서 설정값을 받아옵니다.
-  public setState: () => {} = async () => {
-    await APIService.upDateState()
-    this.host = await APIService.getHOST() || undefined;
-    this.version = await APIService.getVERSION() || '1';
-    this.purge = await APIService.getPURGE() || false;
-    this.isconnect = false;
+  public setState: () => void = async () => {
+      await APIService.upDateState()
+      this.host = await APIService.getHOST() || undefined;
+      this.version = await APIService.getVERSION() || '1';
+      this.purge = await APIService.getPURGE() || false;
   }
-
-  // shutdown command
-  protected shutDown() {
-    return new Promise((resolve) => {
-      this.socket.on('shutdown', () => {
-        console.log("shutdown명령받음");
-      })
-      resolve(true)
-    })
-
-  }
-  // reboot command
-  protected reBoot() {
-    return new Promise((resolve) => {
-      this.socket.on('reboot', () => {
-        console.log("reboot명령받음");
-      })
-      resolve(true)
-    })
-  }
-
   // public makeConnect: () => any = async () => {
   //   while (!this.isconnect) {
   //     // console.log("A");
@@ -82,9 +59,10 @@ class Client implements iClient {
   // 서버에 연결을 시도합니다.
   // 1. 서버에 성공적으로 접속함.
   // 2. 서버 접속 실패.
-  public async ConnectSocket() {
-    console.log(this.host);  
+  public connectSocket: () => void = async () => {
     this.socket = await io.connect(this.host);
+    await this.communication()
+
   }
   // 연결해제 이벤트
   // 1. 서버에 setState함수를 호출해 새로운 호스트를 찾습니다.
@@ -100,16 +78,35 @@ class Client implements iClient {
     })
   }
   // 서버에게 클라이언트 정보 전송
-  public communication() {
+  public communication: () => void = () => {
     return new Promise((resolve) => {
-        this.socket.on("get_userinfo", () => {
-          this.isconnect = true;
-          console.log("서버가 내정보 요청");
-          this.socket.emit("set_userinfo", { "socketID": this.socket.id })
-        })
-      resolve(true);
+      this.socket.on("get_userinfo", () => {
+        this.isconnect = true;
+        console.log("서버가 내정보 요청");
+        this.socket.emit("set_userinfo", { "socketID": this.socket.id })
+      })
+      resolve(true)
     })
   }
+  // shutdown command
+  protected shutDown() {
+    return new Promise((resolve) => {
+      this.socket.on('shutdown', () => {
+        console.log("shutdown명령받음");
+      })
+      resolve(true)
+    })
+  }
+  // reboot command
+  protected reBoot() {
+    return new Promise((resolve) => {
+      this.socket.on('reboot', () => {
+        console.log("reboot명령받음");
+      })
+      resolve(true)
+    })
+  }
+
 }
 
 export default new Client;
