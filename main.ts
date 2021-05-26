@@ -52,7 +52,7 @@ const createWindow = () => {
         await Client.makeSocket(host)
       } catch (error) {
         console.log(error);
-        await sleep(1000);
+        await sleep(20000);
       } 
     }
   }
