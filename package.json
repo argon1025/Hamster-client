@@ -6,7 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "yarn build-electron && electron .",
     "build-electron": "tsc --project tsconfig.json",
-    "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js"
+    "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js",
+    "build-win": "yarn build-react && yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/electron/main.js",
+    "build-mac": "yarn build-react && yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/electron/main.js",
+    "build-linux": "yarn build-react && yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/electron/main.js"
   },
   "repository": {
     "type": "git",
@@ -36,8 +39,9 @@
   "homepage": "./",
   "build": {
     "files": [
-      "build/**/*",
-      "package.json"
+      "dist/**/*",
+      "package.json",
+      "icon.*"
     ]
   }
 }
