@@ -1,5 +1,6 @@
 {
   "name": "hamster-client",
+  "productName": "hamster-client",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -7,9 +8,9 @@
     "start": "yarn build-electron && electron .",
     "build-electron": "tsc --project tsconfig.json",
     "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js",
-    "build-win": "yarn build-react && yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/electron/main.js",
-    "build-mac": "yarn build-react && yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/electron/main.js",
-    "build-linux": "yarn build-react && yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/electron/main.js"
+    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/main.js",
+    "build-mac": "yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/main.js",
+    "build-linux": "yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/main.js"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,7 @@
   "homepage": "./",
   "build": {
     "files": [
-      "dist/**/*",
+      "build/**/*",
       "package.json",
       "icon.*"
     ]
