@@ -40,7 +40,7 @@ function getZipDir(url: string, directory: string): string {
 async function zipFile(url: string, directory: string) {
   try {
     const zipDir = getZipDir(url, directory);
-    console.log(zipDir);
+    console.log(directory);
     let zip = new Zip(zipDir);
     // 지정 경로에 압축을 풉니다, 파일이 있을경우 덮어 씌웁니다
     zip.extractAllTo(directory, true);

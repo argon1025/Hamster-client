@@ -1,8 +1,5 @@
 import * as child_process from "child_process";
-//var iconv = require('iconv-lite');
 
-
-// 출처: https://118k.tistory.com/236 [개발자로 살아남기
 //첫번째 인자는 에러객체이고 stdout은 명령출력결과, stderr는 명령에러출력
 function run(cmds: string) {
     return new Promise((resolve):void => {
@@ -12,12 +9,12 @@ function run(cmds: string) {
             // 모듈 에러 발생
 			if (error) {
 				console.log(error)
-				result = "failedExecute";
+				result = "명령어 실행 에러" + error;
 			}
             // 명령 실행 에러
             if(stderr){
                 console.log(stderr);
-                result = "failedExecute";
+                result = "명령어 실행 에러" + stderr;
             }
             // 명령 실행 완료
             if(stdout){
