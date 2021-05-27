@@ -1,12 +1,16 @@
 {
   "name": "hamster-client",
+  "productName": "hamster-client",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "yarn build-electron && electron .",
     "build-electron": "tsc --project tsconfig.json",
-    "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js"
+    "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js",
+    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/main.js",
+    "build-mac": "yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/main.js",
+    "build-linux": "yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/main.js"
   },
   "repository": {
     "type": "git",
@@ -37,7 +41,8 @@
   "build": {
     "files": [
       "build/**/*",
-      "package.json"
+      "package.json",
+      "icon.*"
     ]
   }
 }
