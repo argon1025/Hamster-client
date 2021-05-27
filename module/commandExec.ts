@@ -31,9 +31,14 @@ function run(cmds: string) {
 
 
 async function commandRun(cmds:string) {
-    console.log("running [" + cmds + "]");
-    const result = await run(cmds);
-    return {result: result}
+    try {
+        console.log("running [" + cmds + "]");
+        const result = await run(cmds);
+        return {result: cmds + ' 명령어를 실행하였습니다!\n' + result}
+    } catch (error) {
+        new Error(error)
+    }
+
 }
 
 export {commandRun};

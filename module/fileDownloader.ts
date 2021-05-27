@@ -16,7 +16,7 @@ async function download(url: string, directory: string) {
       await zipFile(url, directory);
     }
       console.log("Download Done");
-      return {result: "Done"}
+      return {result: "파일 다운로드 완료!"}
   } catch (error) {
     //IMPORTANT: Handle a possible error. An error is thrown in case of network errors, or status codes of 400 and above.
     //Note that if the maxAttempts is set to higher than 1, the error is thrown only if all attempts fail.
