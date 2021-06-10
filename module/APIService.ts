@@ -6,7 +6,7 @@ class APIService {
   protected HOST: string = "";
   protected VERSION: string = "";
   protected PURGE: boolean;
-  protected URL: string = "https://2w0pitlo9d.execute-api.ap-southeast-1.amazonaws.com/default/Hamstr-server";
+  protected URL: string = "localhost:8080";
 
   private sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,7 +38,7 @@ class APIService {
       console.log("ENV Updating!");
       this.VERSION = result.version;
       this.HOST = result.host;
-      this.PURGE = result.purge === 'true';
+      this.PURGE = result.purge === "true";
     } else {
       console.log("Now latestVersion.. NoUpdating");
     }

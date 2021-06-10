@@ -1,6 +1,6 @@
-import { app, BrowserWindow } from 'electron';
-import * as isDev from 'electron-is-dev';
-import * as path from 'path';
+import { app, BrowserWindow } from "electron";
+import * as isDev from "electron-is-dev";
+import * as path from "path";
 import Client from "./module/Client";
 import ServerState from "./module/ServerState";
 
@@ -29,58 +29,44 @@ const createWindow = () => {
   //mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../index.html')}`);
 
   if (isDev) {
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    mainWindow.webContents.openDevTools({ mode: "detach" });
   }
   /**
    * 1. 서버값 받아옴.
    * 2. connect 함.
    * 3. 연결끊김.
    * 4. 서버값 다시 받아옴.
-   * 
+   *
    * 3 4 2
-   * 
+   *
    */
-  const sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-  
-  async function socketConnect(){
-    while (true) {
-      try {
-        await ServerState.getState()
-        const host = ServerState.getHonst();
-        await Client.makeSocket(host)
-      } catch (error) {
-        console.log(error);
-        await sleep(20000);
-      } 
-    }
-  }
-  
-    
-  socketConnect()
-  
+  // const sleep: (ms: number) => Promise<() => {}> = (ms: number) => {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // };
+
+  Client.connectSocket();
+
   // Emitted when the window is c-sd5n6m7p-[]losed.
-  mainWindow.on('closed', () => (mainWindow = undefined!));
+  mainWindow.on("closed", () => (mainWindow = undefined!));
   mainWindow.focus();
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 app.setLoginItemSettings({
   openAtLogin: true,
-  path: app.getPath('exe')
-})
-app.on('activate', () => {
+  path: app.getPath("exe"),
+});
+app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
