@@ -30,10 +30,20 @@ class Client implements iClient {
     socket.on("disconnect", (reason) => {
       console.log(reason);
     });
+    /**
+     * 1. 클라이언트가 연결되었을때 대쉬에게 전달한 정보 emit (client_setClientInfo)
+     * 2. 대쉬보드가 요청 했을때 클라이언트의 정보 알려주기 on (client_getClientInfo)
+     */
     socket.on("connect", () => {
       console.log("conenc");
+      // 1. 클라이언트가 연결되었을때 대쉬에게 전달한 정보 emit (client_setClientInfo)
+      socket.emit("client_setClientInfo", ip.address());
     });
-    socket.emit("SetClientInfo", ip.address());
+    // 2. 대쉬보드가 요청 했을때 클라이언트의 정보 알려주기 on (client_getClientInfo)
+    socket.on("client_getClientInfo", ()=>{
+      console.log("back clientinfo");
+      socket.emit("client_setClientInfo", ip.address());
+    })
     socket.on("shutdown", async () => {
       const result = await commandRun("shutdown -s -t 10");
       socket.emit("logEvent", result);
@@ -42,12 +52,12 @@ class Client implements iClient {
       const result = await commandRun("shutdown -r -t 10");
       socket.emit("logEvent", result);
     });
-    socket.on("filedown", async (url) => {
-      const result = await download(url, `${process.env.APPDATA}\\download`);
-      socket.emit("logEvent", result);
-    });
     socket.on("commnand", async (command) => {
       const result = await commandRun(command);
+      socket.emit("logEvent", result);
+    });
+    socket.on("filedown", async (url) => {
+      const result = await download(url, `${process.env.APPDATA}\\download`);
       socket.emit("logEvent", result);
     });
   };
