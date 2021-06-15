@@ -68,6 +68,7 @@ class Client implements iClient {
       );
     });
     socket.on("commnand", async (dashboardID, data) => {
+      console.log(data);
       const result = await commandRun(data);
       socket.emit(
         "client_logEvent",

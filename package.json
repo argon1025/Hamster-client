@@ -8,7 +8,7 @@
     "start": "yarn build-electron && electron .",
     "build-electron": "tsc --project tsconfig.json",
     "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js",
-    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/main.js",
+    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.requested-execution-level=highestAvailable.main=build/main.js",
     "build-mac": "yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/main.js",
     "build-linux": "yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/main.js"
   },
@@ -41,6 +41,9 @@
   "main": "./build/main.js",
   "homepage": "./",
   "build": {
+    "win": {
+      "requestedExecutionLevel": "highestAvailable"
+    },
     "files": [
       "build/**/*",
       "package.json",
