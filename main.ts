@@ -50,10 +50,6 @@ const createWindow = () => {
   mainWindow.on("closed", () => (mainWindow = undefined!));
   mainWindow.focus();
 };
-var exec = require("child_process").exec;
-exec("NET SESSION", function (err, so, se) {
-  console.log(se.length === 0 ? "admin" : "not admin");
-});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

