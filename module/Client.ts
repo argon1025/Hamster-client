@@ -9,7 +9,7 @@ class Client {
 
   public connectSocket: () => void = async () => {
     let socket = io.connect(
-      "http://ec2-3-34-49-175.ap-northeast-2.compute.amazonaws.com:8828",
+      "http://localhost:8828", //ec2-3-34-49-175.ap-northeast-2.compute.amazonaws.com
       {
         reconnectionAttempt: 3,
       }
@@ -33,28 +33,53 @@ class Client {
       socket.emit("client_setClientInfo", this.IP, dash_socketID);
     });
     socket.on("shutdown", async (dashboardID) => {
+      console.log("shutdown");
       const result = await commandRun("shutdown -s -t 10");
-      socket.emit("client_logEvent", dashboardID, this.IP, socket.id, result);
-    });
-    socket.on("reboot", async (dashboardID) => {
-      const result = await commandRun("shutdown -r -t 10");
-      socket.emit("client_logEvent", dashboardID, this.IP, socket.id, result);
-    });
-    socket.on("commnand", async (dashboardID, command) => {
-      const clientID = this.IP.split(".")[3];
-      const splitedCommand = command.replace("%ip", clientID);
-      const resultCommand = await commandRun(splitedCommand);
+      console.log(result);
       socket.emit(
         "client_logEvent",
         dashboardID,
         this.IP,
         socket.id,
-        resultCommand
+        result.result
+      );
+    });
+    socket.on("reboot", async (dashboardID) => {
+      console.log("reboot");
+      const result = await commandRun("shutdown -r -t 10");
+      console.log(result);
+      socket.emit(
+        "client_logEvent",
+        dashboardID,
+        this.IP,
+        socket.id,
+        result.result
+      );
+    });
+    socket.on("command", async (dashboardID, command) => {
+      console.log("command");
+      const clientID = this.IP.split(".")[3];
+      const splitedCommand = command.replace("%ip", clientID);
+      const resultCommand = await commandRun(splitedCommand);
+      console.log(resultCommand);
+      socket.emit(
+        "client_logEvent",
+        dashboardID,
+        this.IP,
+        socket.id,
+        resultCommand.result
       );
     });
     socket.on("filedown", async (dashboardID, data) => {
+      console.log("filedown");
       const result = await download(data, `${process.env.APPDATA}\\download`);
-      socket.emit("client_logEvent", dashboardID, this.IP, socket.id, result);
+      socket.emit(
+        "client_logEvent",
+        dashboardID,
+        this.IP,
+        socket.id,
+        result.result
+      );
     });
   };
 }
