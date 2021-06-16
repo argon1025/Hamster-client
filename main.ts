@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import * as isDev from "electron-is-dev";
-import * as path from "path";
 import Client from "./module/Client";
-import ServerState from "./module/ServerState";
 
 let mainWindow: BrowserWindow;
 
