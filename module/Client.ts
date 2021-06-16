@@ -2,14 +2,14 @@ import { download } from "./fileDownloader";
 import { commandRun } from "./commandExec";
 
 const io = require("socket.io-client");
-const ip = require("ip");
+const ip = require("internal-ip");
 
 class Client {
-  IP: string = ip.address();
+  IP: string = ip.v4.sync()
 
   public connectSocket: () => void = async () => {
     let socket = io.connect(
-      "http://localhost:8828", //ec2-3-34-49-175.ap-northeast-2.compute.amazonaws.com
+      "http://ec2-3-34-49-175.ap-northeast-2.compute.amazonaws.com:8828", //ec2-3-34-49-175.ap-northeast-2.compute.amazonaws.com
       {
         reconnectionAttempt: 3,
       }

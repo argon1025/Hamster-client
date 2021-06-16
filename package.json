@@ -8,7 +8,7 @@
     "start": "yarn build-electron && electron .",
     "build-electron": "tsc --project tsconfig.json",
     "build": "yarn build-electron && electron-builder build -c.extraMetadata.main=build/main.js",
-    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.requested-execution-level=highestAvailable.main=build/main.js",
+    "build-win": "yarn build-electron && electron-builder build -w -c.extraMetadata.main=build/main.js",
     "build-mac": "yarn build-electron && electron-builder build -m -c.extraMetadata.main=build/main.js",
     "build-linux": "yarn build-electron && electron-builder build -l -c.extraMetadata.main=build/main.js"
   },
@@ -31,6 +31,7 @@
     "adm-zip": "^0.5.5",
     "axios": "^0.21.1",
     "electron-is-dev": "^2.0.0",
+    "internal-ip": "^6.2.0",
     "ip": "^1.1.5",
     "node-cmd": "^4.0.0",
     "nodejs-file-downloader": "^4.5.3",
@@ -41,9 +42,6 @@
   "main": "./build/main.js",
   "homepage": "./",
   "build": {
-    "win": {
-      "requestedExecutionLevel": "highestAvailable"
-    },
     "files": [
       "build/**/*",
       "package.json",
