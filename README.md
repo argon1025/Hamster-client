@@ -7,7 +7,7 @@ SocketIO를 사용한 컴퓨터 매니지먼트 솔루션의 클라이언트
 
 ## Project requirement
 Hamster [Dashboard](https://github.com/argon1025/Hamster-Dashboard)\
-Hamster [SocketIO-Server](https://github.com/argon1025/Hamster-Dashboard)\
+Hamster [SocketIO-Server](https://github.com/MINJE-98/Hamster-Websocket)\
 Hamster [Client](https://github.com/argon1025/Hamster-client)
 
 # Project Stack
