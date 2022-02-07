@@ -1,3 +1,4 @@
+> This project won't be maintained ⚒️
 # Hamster-client
 Local computer management solution Client\
 SocketIO를 사용한 컴퓨터 매니지먼트 솔루션의 클라이언트
